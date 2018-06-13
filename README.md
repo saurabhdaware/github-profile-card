@@ -43,5 +43,6 @@ Unofficial Github profile card for your websites / blogs
 
 
 ## About Project
-- Let me know if you want any bug.
-- You can contribute to this project if you find any possible improvements
+- Let me know if you find any bug.
+- You can contribute to this project 
+- Send pull request if you find any possible improvement

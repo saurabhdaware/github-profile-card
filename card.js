@@ -30,7 +30,7 @@ let head  = document.getElementsByTagName('head')[0];
 let link  = document.createElement('link');
 link.rel  = 'stylesheet';
 link.type = 'text/css';
-link.href = 'cardStyle.css';
+link.href = 'https://saurabhdaware.github.io/github-profile-card/cardStyle.css';
 link.media = 'all';
 head.appendChild(link);
 

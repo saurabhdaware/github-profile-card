@@ -2,6 +2,7 @@
 .github-card{
 margin:0 !important;
 padding:0;
+display:inline-block;
 border:1px solid black;
 width:300px;
 font-family: 'Play', sans-serif;

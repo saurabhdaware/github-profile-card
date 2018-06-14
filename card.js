@@ -66,34 +66,41 @@ class Card{
         </div>
     </div>
 `;      }).then(()=>{
-            if(this.repo1== null && this.repo2 == null){document.getElementById('github-card-repo-headline').style.display = 'none'}
-            if(this.repo1 != null){
+            if((this.repo1== null || this.repo1 == undefined || this.repo1 == '') && (this.repo2 == null || this.repo2 == undefined || this.repo2 == '')){document.getElementById('github-card-repo-headline').style.display = 'none'}
+            if(this.repo1 != null || this.repo1 != undefined || this.repo1 != ''){
                 try{
                     http.get(`https://api.github.com/repos/${this.username}/${this.repo1}`).then((repo1Data)=>{
+                        if(repo1Data.name == undefined){
+                            document.getElementById('github-card-repo1').style.display = 'none';
+                        }
                         document.getElementById('github-card-repo1').innerHTML =
     `
     <a class='github-card-repo-headline' href="${repo1Data.html_url}"><b>${repo1Data.name}</b></a><br>
     <span class='github-card-repo-desc'>${repo1Data.description}</span><br><span style='font-size:8pt;'>&#9733; ${repo1Data.language}</span>
     `
-                    }).catch((err)=>{document.getElementById('github-card-repo1').style.display = 'none'});
+                    }).catch((err)=>{document.getElementById('github-card-repo1').style.display = 'none';this.repo1 = null});
                 }
-                catch{document.getElementById('github-card-repo1').style.display = 'none';}
+                catch{document.getElementById('github-card-repo1').style.display = 'none';this.repo1 = null}
 
-            }else{document.getElementById('github-card-repo1').style.display = 'none';}
-            if(this.repo2 !=null){
+            }else{document.getElementById('github-card-repo1').style.display = 'none';this.repo1 = null}
+
+            if(this.repo2 !=null || this.repo2 !=undefined || this.repo2 != ''){
                 try{
                     http.get(`https://api.github.com/repos/${this.username}/${this.repo2}`).then((repo2Data)=>{
+                        if(repo2Data.name == undefined){
+                            document.getElementById('github-card-repo2').style.display = 'none';
+                        }
                         document.getElementById('github-card-repo2').innerHTML =
     `
     <a class='github-card-repo-headline' href="${repo2Data.html_url}"><b>${repo2Data.name}</b></a><br>
     <span class='github-card-repo-desc'>${repo2Data.description}</span><br><span style='font-size:8pt;'>&#9733; ${repo2Data.language}</span>
     `
-                    }).catch((err)=>{document.getElementById('github-card-repo2').style.display = 'none';})
+                    }).catch((err)=>{document.getElementById('github-card-repo2').style.display = 'none';this.repo2 = null})
                 }
-                catch{document.getElementById('github-card-repo2').style.display = 'none';}
+                catch{document.getElementById('github-card-repo2').style.display = 'none';this.repo2 = null}
    
-            }else{document.getElementById('github-card-repo2').style.display = 'none';}
-        }).catch((err)=>{console.log(err)});
+            }else{document.getElementById('github-card-repo2').style.display = 'none'; this.repo2 = null}
+        }).catch((err)=>{console.log(err)})
     }
 }
 

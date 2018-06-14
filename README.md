@@ -23,6 +23,28 @@ Unofficial Github profile card for your websites / blogs
 
 ```
 
+## How to customize
+- These are the original styles of outer div
+```
+.github-profile{
+    margin:0 !important;
+    padding:0;
+    display:inline-block;
+    border:1px solid black;
+    width:300px;
+    font-family: 'Play', sans-serif;
+    box-shadow:0 4px 10px 0 rgba(0,0,0,0.2),0 4px 20px 0 rgba(0,0,0,0.19)
+}
+```
+
+
+- If your name doesn't fit perfectly in the card you can adjust the width of that card with
+```
+.github-profile{
+    width:400px !important;
+}
+```
+
 
 ## Example
 - Input

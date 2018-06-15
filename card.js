@@ -99,27 +99,26 @@
     return string1 === string2;
   }
 
-  if (document.getElementById('card') == null) {
-    console.log("please write script tag at the end of the body tag");
+  window.onload = function() {
+    let username = document.getElementById('card').getAttribute('username');
+    let repo = document.getElementById('card').getAttribute('repos');
+    let repos;
+    let nullCounts = 0;
+    if (repo == null || repo == undefined) {
+      let repo1 = document.getElementById('card').getAttribute('repo1');
+      let repo2 = document.getElementById('card').getAttribute('repo2');
+      repos = [repo1, repo2];
+    } else {
+      repos = repo.split(/\s*,\s*/);
+    }
+    let head = document.getElementsByTagName('head')[0];
+    let link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = 'https://saurabhdaware.github.io/github-profile-card/cardStyle.css';
+    link.media = 'all';
+    head.appendChild(link);
+    let card = new Card(username, repos);
+    card.create();
   }
-  let username = document.getElementById('card').getAttribute('username');
-  let repo = document.getElementById('card').getAttribute('repos');
-  let repos;
-  let nullCounts = 0;
-  if (repo == null || repo == undefined) {
-    let repo1 = document.getElementById('card').getAttribute('repo1');
-    let repo2 = document.getElementById('card').getAttribute('repo2');
-    repos = [repo1, repo2];
-  } else {
-    repos = repo.split(/\s*,\s*/);
-  }
-  let head = document.getElementsByTagName('head')[0];
-  let link = document.createElement('link');
-  link.rel = 'stylesheet';
-  link.type = 'text/css';
-  link.href = 'https://saurabhdaware.github.io/github-profile-card/cardStyle.css';
-  link.media = 'all';
-  head.appendChild(link);
-  let card = new Card(username, repos);
-  card.create();
 })();

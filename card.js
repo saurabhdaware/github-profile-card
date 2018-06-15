@@ -100,6 +100,12 @@
   }
 
   window.onload = function() {
+    let link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = 'https://saurabhdaware.github.io/github-profile-card/cardStyle.css';
+    link.media = 'all';
+    document.head.appendChild(link);
     let cardElem = document.getElementById('card');
     let username = cardElem.getAttribute('username');
     let repo = cardElem.getAttribute('repos');
@@ -112,12 +118,6 @@
     } else {
       repos = repo.split(/\s*,\s*/);
     }
-    let link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.type = 'text/css';
-    link.href = 'https://saurabhdaware.github.io/github-profile-card/cardStyle.css';
-    link.media = 'all';
-    document.head.appendChild(link);
     let card = new Card(username, repos);
     card.create();
   }

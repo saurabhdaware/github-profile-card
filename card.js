@@ -1,8 +1,17 @@
 (function() {
   class Card {
     constructor(cardElem) {
+      this.cardElem = cardElem;
       if (!cardElem.getAttribute('repos')) {
-        this.repos = [cardElem.getAttribute('repo1'), cardElem.getAttribute('repo2')];
+        if(!cardElem.getAttribute('repo1')) {
+          this.repos = "";
+        }
+        else if(!cardElem.getAttribute('repo2')) {
+          this.repos = [cardElem.getAttribute('repo1')];
+        }
+        else {
+          this.repos = [cardElem.getAttribute('repo1'), cardElem.getAttribute('repo2')];
+        }
       } else {
         this.repos = cardElem.getAttribute('repos').split(',');
       }
@@ -11,7 +20,7 @@
     create() {
       let http = new HttpJS();
       http.get('https://api.github.com/users/' + this.username).then((card) => {
-        document.getElementById('card').innerHTML =
+        this.cardElem.innerHTML =
           `
     <div class ='github-card-container'>
         <div class='github-card-header'>
@@ -38,7 +47,6 @@
         } else {
           try {
             let nullCounts = 0;
-            var reposNames = [];
             http.get(`https://api.github.com/users/${this.username}/repos`).then((reposData) => {
               for (let i = 0; i < this.repos.length; i++) {
                 if (this.repos[i] == null || this.repos[i] == undefined || this.repos[i] == '') {
@@ -94,7 +102,7 @@
             reject('404');
           }
         }
-      })
+      });
     }
   }
 

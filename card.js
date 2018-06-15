@@ -1,55 +1,4 @@
 (function() {
-  class HttpJS {
-    constructor() {}
-    get(url) {
-      return new Promise(function(resolve, reject) {
-        let xhr = new XMLHttpRequest();
-        xhr.open('GET', url, true);
-        xhr.send();
-
-        xhr.addEventListener('readystatechange', processRequest, false);
-        xhr.onreadystatechange = processRequest;
-
-        function processRequest(e) {
-          if (xhr.readyState == 4 && xhr.status != 404) {
-            resolve(JSON.parse(xhr.responseText));
-          }
-          if (xhr.status == 404) {
-            reject('404');
-          }
-        }
-      })
-    }
-  }
-
-  function compareStrings(string1, string2) {
-    string1 = string1.toLowerCase().trim();
-    string2 = string2.toLowerCase().trim();
-    return string1 === string2;
-  }
-
-  if (document.getElementById('card') == null) {
-    console.log("please write script tag at the end of the body tag");
-  }
-  let username = document.getElementById('card').getAttribute('username');
-  let repo = document.getElementById('card').getAttribute('repos');
-  let repos;
-  let nullCounts = 0;
-  if (repo == null || repo == undefined) {
-    let repo1 = document.getElementById('card').getAttribute('repo1');
-    let repo2 = document.getElementById('card').getAttribute('repo2');
-    repos = [repo1, repo2];
-  } else {
-    repos = repo.split(/\s*,\s*/);
-  }
-  let head = document.getElementsByTagName('head')[0];
-  let link = document.createElement('link');
-  link.rel = 'stylesheet';
-  link.type = 'text/css';
-  link.href = 'https://saurabhdaware.github.io/github-profile-card/cardStyle.css';
-  link.media = 'all';
-  head.appendChild(link);
-
   class Card {
     constructor(username, repos = []) {
       this.username = username;
@@ -121,6 +70,56 @@
     }
   }
 
+  class HttpJS {
+    constructor() {}
+    get(url) {
+      return new Promise(function(resolve, reject) {
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.send();
+
+        xhr.addEventListener('readystatechange', processRequest, false);
+        xhr.onreadystatechange = processRequest;
+
+        function processRequest(e) {
+          if (xhr.readyState == 4 && xhr.status != 404) {
+            resolve(JSON.parse(xhr.responseText));
+          }
+          if (xhr.status == 404) {
+            reject('404');
+          }
+        }
+      })
+    }
+  }
+
+  function compareStrings(string1, string2) {
+    string1 = string1.toLowerCase().trim();
+    string2 = string2.toLowerCase().trim();
+    return string1 === string2;
+  }
+
+  if (document.getElementById('card') == null) {
+    console.log("please write script tag at the end of the body tag");
+  }
+  let username = document.getElementById('card').getAttribute('username');
+  let repo = document.getElementById('card').getAttribute('repos');
+  let repos;
+  let nullCounts = 0;
+  if (repo == null || repo == undefined) {
+    let repo1 = document.getElementById('card').getAttribute('repo1');
+    let repo2 = document.getElementById('card').getAttribute('repo2');
+    repos = [repo1, repo2];
+  } else {
+    repos = repo.split(/\s*,\s*/);
+  }
+  let head = document.getElementsByTagName('head')[0];
+  let link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.type = 'text/css';
+  link.href = 'https://saurabhdaware.github.io/github-profile-card/cardStyle.css';
+  link.media = 'all';
+  head.appendChild(link);
   let card = new Card(username, repos);
   card.create();
 })();

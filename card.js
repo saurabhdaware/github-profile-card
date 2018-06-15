@@ -101,13 +101,13 @@
 
   window.onload = function() {
     let cardElem = document.getElementById('card');
-    let username = cardElement.getAttribute('username');
-    let repo = cardElement.getAttribute('repos');
+    let username = cardElem.getAttribute('username');
+    let repo = cardElem.getAttribute('repos');
     let repos;
     let nullCounts = 0;
     if (repo == null || repo == undefined) {
-      let repo1 = cardElement.getAttribute('repo1');
-      let repo2 = cardElement.getAttribute('repo2');
+      let repo1 = cardElem.getAttribute('repo1');
+      let repo2 = cardElem.getAttribute('repo2');
       repos = [repo1, repo2];
     } else {
       repos = repo.split(/\s*,\s*/);

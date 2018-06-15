@@ -18,6 +18,10 @@
       this.username = cardElem.getAttribute('username');
     }
     create() {
+      if(!this.username) {
+        console.log('Username not specified');
+        return;
+      }
       let http = new HttpJS();
       http.get('https://api.github.com/users/' + this.username).then((card) => {
         this.cardElem.innerHTML =

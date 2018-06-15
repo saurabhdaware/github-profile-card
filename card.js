@@ -1,8 +1,12 @@
 (function() {
   class Card {
-    constructor(username, repos = []) {
-      this.username = username;
-      this.repos = repos;
+    constructor(cardElem) {
+      if (!cardElem.getAttribute('repos')) {
+        this.repos = [cardElem.getAttribute('repo1'), cardElem.getAttribute('repo2')];
+      } else {
+        this.repos = cardElem.getAttribute('repos').split(',');
+      }
+      this.username = cardElem.getAttribute('username');
     }
     create() {
       let http = new HttpJS();
@@ -33,6 +37,7 @@
           document.getElementById('github-card-repo-headline').style.display = 'none'
         } else {
           try {
+            let nullCounts = 0;
             var reposNames = [];
             http.get(`https://api.github.com/users/${this.username}/repos`).then((reposData) => {
               for (let i = 0; i < this.repos.length; i++) {
@@ -100,19 +105,7 @@
     link.href = 'https://saurabhdaware.github.io/github-profile-card/cardStyle.css';
     link.media = 'all';
     document.head.appendChild(link);
-    let cardElem = document.getElementById('card');
-    let username = cardElem.getAttribute('username');
-    let repo = cardElem.getAttribute('repos');
-    let repos;
-    let nullCounts = 0;
-    if (repo == null || repo == undefined) {
-      let repo1 = cardElem.getAttribute('repo1');
-      let repo2 = cardElem.getAttribute('repo2');
-      repos = [repo1, repo2];
-    } else {
-      repos = repo.split(/\s*,\s*/);
-    }
-    let card = new Card(username, repos);
+    let card = new Card(document.getElementById('card'));
     card.create();
   }
 })();

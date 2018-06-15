@@ -6,9 +6,9 @@ Unofficial Github profile card for your websites / blogs
 
 ## How to use
 
-- Enter your username, repository names(seprated by ",") and paste wherever you want your card
+- Enter your username, repository names(seprated by ",") and paste wherever you want your card to appear
 ```
-    <div username='saurabhdaware' repos='github-profile-card, storm, stormv2' class='github-card' id="card"></div>
+    <div username='saurabhdaware' repos='github-profile-card, storm, stormv2,planetZerugoria' class='github-card' id="card"></div>
 ```
 
 - Paste following code before the end of body tag `</body>`
@@ -46,6 +46,15 @@ Unofficial Github profile card for your websites / blogs
 ```
 
 
+- Adding more than 3 repositories will add a scrollbar in the card if you want to remove that scrollbar you can put following in your css
+```
+.github-card-repos{
+    max-height:none !important;
+    overflow-y: visible !important;
+}
+```
+
+
 ## Example
 - Input
 
@@ -54,9 +63,9 @@ Unofficial Github profile card for your websites / blogs
     <head>
     </head>
     <body>
-        <!-- Other html code-->
-        <div username='saurabhdaware' repos='github-profile-card,storm, stormv2' class='github-card' id="card"></div>
-        <!-- Other html code -->
+        <!-- Other html -->
+        <div username='saurabhdaware' repos='github-profile-card,storm,stormv2,planetZerugoria' class='github-card' id="card"></div>
+        <!-- More html -->
         <script src='https://saurabhdaware.github.io/github-profile-card/card.js'></script>
     </body>
 </html>
@@ -64,19 +73,9 @@ Unofficial Github profile card for your websites / blogs
 
 - Output
 
-![](https://raw.githubusercontent.com/aks13raut/github-profile-card/master/example.png)
-
-![](https://raw.githubusercontent.com/aks13raut/github-profile-card/master/example2.png)
+![](https://raw.githubusercontent.com/saurabhdaware/github-profile-card/master/example.png)
 
 
 ## About Project
 - Let me know if you find any bug.
-- You can contribute to this project 
-- Send pull request if you find any possible improvement
-
-## Known Bugs:
-- whitespace added after the last repository results in that repository not being found
-  avoid 
-```
-    <div username='saurabhdaware' repos='github-profile-card, storm,stormv2 ' class='github-card' id="card"></div>
-```
+- Send pull request if you find any possible improvement.

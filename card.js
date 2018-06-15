@@ -21,16 +21,23 @@ class HttpJS{
     }
 }
 function compareStrings (string1, string2) {
-        string1 = string1.toLowerCase();
-        string2 = string2.toLowerCase();
+        string1 = string1.toLowerCase().trim();
+        string2 = string2.toLowerCase().trim();
     return string1 === string2;
 }
 
 if(document.getElementById('card') == null){console.log("please write script tag at the end of the body tag");}
 let username = document.getElementById('card').getAttribute('username');
 let repo = document.getElementById('card').getAttribute('repos');
-let repos = repo.split(/\s*,\s*/);
-
+let repos;
+let nullCounts = 0;
+if(repo == null || repo == undefined ){
+    let repo1 = document.getElementById('card').getAttribute('repo1');
+    let repo2 = document.getElementById('card').getAttribute('repo2');
+    repos = [repo1,repo2];
+}else{
+    repos = repo.split(/\s*,\s*/);
+}
 let head  = document.getElementsByTagName('head')[0];
 let link  = document.createElement('link');
 link.rel  = 'stylesheet';
@@ -68,24 +75,20 @@ class Card{
         </div>
     </div>
 `;      }).then(()=>{
-            if(this.repos.length == 0){
-				console.log("No repostries found.please refer list beloow to correct any typos.");
+            if(this.repos.length == 0 || (this.repos.length == 1 && (this.repos[0] == ''||this.repos[0]==' '))){
 				document.getElementById('github-card-repo-headline').style.display = 'none'
 			}
             else{
                 try{
 					var reposNames = [];
                     http.get(`https://api.github.com/users/${this.username}/repos`).then((reposData)=>{
-						for (var i=0; i < reposData.length; i++){
-							reposNames[i] = reposData[i].name;
-						}
-						console.log("Your Repositories:-")
-						for (var i=0; i < reposNames.length; i++){
-							console.log(reposNames[i]);
-						}
-						for (var i=0;i < this.repos.length ; i++){
-							for (var j=0; j < reposNames.length; j++){
-								if (compareStrings(repos[i],reposNames[j])){
+						for (let i=0;i < this.repos.length ; i++){
+                            if(this.repos[i] == null || this.repos[i] == undefined || this.repos[i] == ''){
+                                nullCounts++;
+                                continue;
+                            }
+							for (let j=0; j < reposData.length; j++){
+								if (compareStrings(this.repos[i],reposData[j].name)){
 									var div = document.createElement('div');
 									div.id = 'github-card-repo'+(i+1);
 									div.innerHTML = "<a class='github-card-repo-headline' href="+reposData[j].html_url+"><b>"+reposData[j].name+"</b></a><br><span class='github-card-repo-desc'>"+reposData[j].description+"</span><br><span style='font-size:8pt;'>&#9733;"+reposData[j].language+"</span>";
@@ -93,7 +96,11 @@ class Card{
 									document.getElementById('github-card-repos').appendChild(div);
 								}
 							}
-						}
+                        }
+                        
+                        if(nullCounts >= this.repos.length){
+                            document.getElementById('github-card-repo-headline').style.display = 'none'
+                        }
                     }).catch((err)=>{
 						var caler_line = err.stack
 						console.log("Error02: "+err);

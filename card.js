@@ -112,13 +112,12 @@
     } else {
       repos = repo.split(/\s*,\s*/);
     }
-    let head = document.getElementsByTagName('head')[0];
     let link = document.createElement('link');
     link.rel = 'stylesheet';
     link.type = 'text/css';
     link.href = 'https://saurabhdaware.github.io/github-profile-card/cardStyle.css';
     link.media = 'all';
-    head.appendChild(link);
+    document.head.appendChild(link);
     let card = new Card(username, repos);
     card.create();
   }

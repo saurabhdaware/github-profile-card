@@ -41,7 +41,7 @@
                   continue;
                 }
                 for (let j = 0; j < reposData.length; j++) {
-                  if (compareStrings(this.repos[i], reposData[j].name)) {
+                  if (this.repos[i].toLowerCase().trim() === reposData[j].name.toLowerCase().trim()) {
                     var div = document.createElement('div');
                     div.id = 'github-card-repo' + (i + 1);
                     div.innerHTML = "<a class='github-card-repo-headline' href=" + reposData[j].html_url + "><b>" + reposData[j].name + "</b></a><br><span class='github-card-repo-desc'>" + reposData[j].description + "</span><br><span style='font-size:8pt;'>&#9733;" + reposData[j].language + "</span>";
@@ -91,12 +91,6 @@
         }
       })
     }
-  }
-
-  function compareStrings(string1, string2) {
-    string1 = string1.toLowerCase().trim();
-    string2 = string2.toLowerCase().trim();
-    return string1 === string2;
   }
 
   window.onload = function() {

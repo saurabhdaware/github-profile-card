@@ -100,13 +100,14 @@
   }
 
   window.onload = function() {
-    let username = document.getElementById('card').getAttribute('username');
-    let repo = document.getElementById('card').getAttribute('repos');
+    let cardElem = document.getElementById('card');
+    let username = cardElement.getAttribute('username');
+    let repo = cardElement.getAttribute('repos');
     let repos;
     let nullCounts = 0;
     if (repo == null || repo == undefined) {
-      let repo1 = document.getElementById('card').getAttribute('repo1');
-      let repo2 = document.getElementById('card').getAttribute('repo2');
+      let repo1 = cardElement.getAttribute('repo1');
+      let repo2 = cardElement.getAttribute('repo2');
       repos = [repo1, repo2];
     } else {
       repos = repo.split(/\s*,\s*/);

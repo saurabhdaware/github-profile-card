@@ -65,7 +65,8 @@ Unofficial Github profile card for your websites / blogs
 - Output
 
 ![](https://raw.githubusercontent.com/aks13raut/github-profile-card/master/example.png)
-![](https://raw.githubusercontent.com/aks13raut/github-profile-card/master/example2png)
+
+![](https://raw.githubusercontent.com/aks13raut/github-profile-card/master/example2.png)
 
 
 ## About Project

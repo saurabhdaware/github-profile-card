@@ -20,11 +20,16 @@ class HttpJS{
         })
     }
 }
+function compareStrings (string1, string2) {
+        string1 = string1.toLowerCase();
+        string2 = string2.toLowerCase();
+    return string1 === string2;
+}
 
 if(document.getElementById('card') == null){console.log("please write script tag at the end of the body tag");}
 let username = document.getElementById('card').getAttribute('username');
-let repo1 = document.getElementById('card').getAttribute('repo1');
-let repo2 = document.getElementById('card').getAttribute('repo2');
+let repo = document.getElementById('card').getAttribute('repos');
+let repos = repo.split(/\s*,\s*/);
 
 let head  = document.getElementsByTagName('head')[0];
 let link  = document.createElement('link');
@@ -35,10 +40,9 @@ link.media = 'all';
 head.appendChild(link);
 
 class Card{
-    constructor(username,repo1=null,repo2=null){
+    constructor(username,repos=[]){
         this.username = username;
-        this.repo1 = repo1;
-        this.repo2 = repo2;
+        this.repos = repos;
     }
     create(){
         let http = new HttpJS();
@@ -61,48 +65,49 @@ class Card{
         </div><br><br><br><br>
         <span id='github-card-repo-headline' style='font-size:9pt;color:#777font-weight:bold;margin:text-align:center'><center>Repositories</center></span>
         <div class='github-card-repos' id='github-card-repos'>
-            <div id='github-card-repo1' class='github-card-repo'></div>
-            <div id='github-card-repo2' class='github-card-repo'></div>
         </div>
     </div>
 `;      }).then(()=>{
-            if((this.repo1== null || this.repo1 == undefined || this.repo1 == '') && (this.repo2 == null || this.repo2 == undefined || this.repo2 == '')){document.getElementById('github-card-repo-headline').style.display = 'none'}
-            if(this.repo1 != null || this.repo1 != undefined || this.repo1 != ''){
+            if(this.repos.length == 0){
+				console.log("No repostries found.please refer list beloow to correct any typos.");
+				document.getElementById('github-card-repo-headline').style.display = 'none'
+			}
+            else{
                 try{
-                    http.get(`https://api.github.com/repos/${this.username}/${this.repo1}`).then((repo1Data)=>{
-                        if(repo1Data.name == undefined){
-                            document.getElementById('github-card-repo1').style.display = 'none';
-                        }
-                        document.getElementById('github-card-repo1').innerHTML =
-    `
-    <a class='github-card-repo-headline' href="${repo1Data.html_url}"><b>${repo1Data.name}</b></a><br>
-    <span class='github-card-repo-desc'>${repo1Data.description}</span><br><span style='font-size:8pt;'>&#9733; ${repo1Data.language}</span>
-    `
-                    }).catch((err)=>{document.getElementById('github-card-repo1').style.display = 'none';this.repo1 = null});
+					var reposNames = [];
+                    http.get(`https://api.github.com/users/${this.username}/repos`).then((reposData)=>{
+						for (var i=0; i < reposData.length; i++){
+							reposNames[i] = reposData[i].name;
+						}
+						console.log("Your Repositories:-")
+						for (var i=0; i < reposNames.length; i++){
+							console.log(reposNames[i]);
+						}
+						for (var i=0;i < this.repos.length ; i++){
+							for (var j=0; j < reposNames.length; j++){
+								if (compareStrings(repos[i],reposNames[j])){
+									var div = document.createElement('div');
+									div.id = 'github-card-repo'+(i+1);
+									div.innerHTML = "<a class='github-card-repo-headline' href="+reposData[j].html_url+"><b>"+reposData[j].name+"</b></a><br><span class='github-card-repo-desc'>"+reposData[j].description+"</span><br><span style='font-size:8pt;'>&#9733;"+reposData[j].language+"</span>";
+									div.classList.add('github-card-repo');
+									document.getElementById('github-card-repos').appendChild(div);
+								}
+							}
+						}
+                    }).catch((err)=>{
+						var caler_line = err.stack
+						console.log("Error02: "+err);
+						document.getElementById('github-card-repo-headline').style.display = 'none'}
+						);
                 }
-                catch{document.getElementById('github-card-repo1').style.display = 'none';this.repo1 = null}
-
-            }else{document.getElementById('github-card-repo1').style.display = 'none';this.repo1 = null}
-
-            if(this.repo2 !=null || this.repo2 !=undefined || this.repo2 != ''){
-                try{
-                    http.get(`https://api.github.com/repos/${this.username}/${this.repo2}`).then((repo2Data)=>{
-                        if(repo2Data.name == undefined){
-                            document.getElementById('github-card-repo2').style.display = 'none';
-                        }
-                        document.getElementById('github-card-repo2').innerHTML =
-    `
-    <a class='github-card-repo-headline' href="${repo2Data.html_url}"><b>${repo2Data.name}</b></a><br>
-    <span class='github-card-repo-desc'>${repo2Data.description}</span><br><span style='font-size:8pt;'>&#9733; ${repo2Data.language}</span>
-    `
-                    }).catch((err)=>{document.getElementById('github-card-repo2').style.display = 'none';this.repo2 = null})
-                }
-                catch{document.getElementById('github-card-repo2').style.display = 'none';this.repo2 = null}
-   
-            }else{document.getElementById('github-card-repo2').style.display = 'none'; this.repo2 = null}
-        }).catch((err)=>{console.log(err)})
-    }
+                catch{
+					console.log("Error03");
+					document.getElementById('github-card-repo-headline').style.display = 'none';
+				}
+			}
+		}).catch((err)=>{console.log(err)});
+	}
 }
 
-let card = new Card(username,repo1,repo2);
+let card = new Card(username,repos);
 card.create();

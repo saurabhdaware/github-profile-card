@@ -6,9 +6,9 @@ Unofficial Github profile card for your websites / blogs
 
 ## How to use
 
-- Enter your username, 1st repository name and 2nd repository name and paste wherever you want your card
+- Enter your username, repository names(seprated by ",") and paste wherever you want your card
 ```
-    <div username='saurabhdaware' repo1='storm' repo2='stormv2' class='github-card' id="card"></div>
+    <div username='saurabhdaware' repos='github-profile-card, storm, stormv2' class='github-card' id="card"></div>
 ```
 
 - Paste following code before the end of body tag `</body>`
@@ -55,7 +55,7 @@ Unofficial Github profile card for your websites / blogs
     </head>
     <body>
         <!-- Other html code-->
-        <div username='saurabhdaware' repo1='storm' repo2='stormv2' class='github-card' id="card"></div>
+        <div username='saurabhdaware' repos='github-profile-card,storm, stormv2' class='github-card' id="card"></div>
         <!-- Other html code -->
         <script src='https://saurabhdaware.github.io/github-profile-card/card.js'></script>
     </body>
@@ -64,10 +64,19 @@ Unofficial Github profile card for your websites / blogs
 
 - Output
 
-![](https://raw.githubusercontent.com/saurabhdaware/github-profile-card/master/example.png)
+![](https://raw.githubusercontent.com/aks13raut/github-profile-card/master/example.png)
+
+![](https://raw.githubusercontent.com/aks13raut/github-profile-card/master/example2.png)
 
 
 ## About Project
 - Let me know if you find any bug.
 - You can contribute to this project 
 - Send pull request if you find any possible improvement
+
+## Known Bugs:
+- whitespace added after the last repository results in that repository not being found
+  avoid 
+```
+    <div username='saurabhdaware' repos='github-profile-card, storm,stormv2 ' class='github-card' id="card"></div>
+```

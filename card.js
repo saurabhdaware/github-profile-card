@@ -150,7 +150,9 @@
     link.href = 'https://saurabhdaware.github.io/github-profile-card/cardStyle.css';
     link.media = 'all';
     document.head.appendChild(link);
-    let card = new Card(document.getElementById('card'));
-    card.create();
+    document.querySelectorAll('.github-card').forEach(function(a) {
+      let card = new Card(a);
+      card.create();
+    });
   }
 })();

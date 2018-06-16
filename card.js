@@ -1,120 +1,156 @@
-class HttpJS{
-    constructor(){}
-    get(url){
-        return new Promise(function(resolve,reject){
-            let xhr = new XMLHttpRequest();
-            xhr.open('GET', url, true);
-            xhr.send();
-        
-            xhr.addEventListener('readystatechange',processRequest,false);
-            xhr.onreadystatechange = processRequest;
-        
-            function processRequest(e){
-                if(xhr.readyState == 4 && xhr.status != 404){
-                    resolve(JSON.parse(xhr.responseText));
-                }
-                if(xhr.status == 404){
-                    reject('404');
-                }
+(function() {
+  class Card {
+    constructor(cardElem) {
+      this.cardElem = cardElem;
+      if (!cardElem.getAttribute('repos')) {
+        this.repos = [];
+        if (cardElem.getAttribute('repo1')) {
+          this.repos.push(cardElem.getAttribute('repo1'));
+        }
+        if (cardElem.getAttribute('repo2')) {
+          this.repos.push(cardElem.getAttribute('repo2'));
+        }
+      } else {
+        this.repos = cardElem.getAttribute('repos').split(',');
+      }
+      this.username = cardElem.getAttribute('username');
+    }
+    create() {
+      if (!this.username) {
+        console.log('Username not specified');
+        return;
+      }
+      let http = new HttpJS();
+      http.get('https://api.github.com/users/' + this.username).then((card) => {
+        var cardContainer = document.createElement('div');
+        cardContainer.classList.add('github-card-container');
+        var cardHeader = document.createElement('div');
+        cardHeader.classList.add('github-card-header');
+        var cardLogo = document.createElement('img');
+        cardLogo.classList.add('github-card-logo');
+        cardLogo.setAttribute('src', 'https://magentys.io/wp-content/uploads/2017/04/github-logo-1.png');
+        cardHeader.appendChild(cardLogo);
+        cardContainer.appendChild(cardHeader);
+        var cardContent = document.createElement('div');
+        cardContent.classList.add('github-card-content');
+        var cardImageTextWrap = document.createElement('table');
+        cardImageTextWrap.classList.add('github-card-image-text-wrap');
+        var tableTd1 = document.createElement('td');
+        var cardAvatar = document.createElement('img');
+        cardAvatar.classList.add('github-card-avatar');
+        cardAvatar.setAttribute('src', card.avatar_url);
+        cardAvatar.setAttribute('width', 100);
+        tableTd1.appendChild(cardAvatar);
+        cardImageTextWrap.appendChild(tableTd1);
+        var tableTd2 = document.createElement('td');
+        tableTd2.classList.add('github-card-name');
+        tableTd2.innerHTML = card.name + "<br />";
+        var span1 = document.createElement('span');
+        span1.style.color = '#222';
+        span1.style.fontSize = '9pt';
+        span1.innerHTML = 'Followers: ' + card.followers + ' | Following: ' + card.following;
+        tableTd2.appendChild(span1);
+        tableTd2.innerHTML += "<br />";
+        var cardButton = document.createElement('a');
+        cardButton.classList.add('github-card-button');
+        cardButton.setAttribute('href', card.html_url);
+        cardButton.setAttribute('target', '_blank');
+        cardButton.innerHTML = 'View profile';
+        tableTd2.appendChild(cardButton);
+        cardImageTextWrap.appendChild(tableTd2);
+        cardContent.appendChild(cardImageTextWrap);
+        cardContainer.appendChild(cardContent);
+        cardContainer.innerHTML += "<br /><br /><br /><br />";
+        if (this.repos.length > 0) {
+          try {
+            http.get(`https://api.github.com/users/${this.username}/repos`).then((reposData) => {
+              var reposFound = [];
+              this.repos.forEach(function(i, iInd) {
+                reposData.forEach(function(j) {
+                  if (i.toLowerCase().trim() === j.name.toLowerCase().trim()) {
+                    reposFound.push(j);
+                  }
+                });
+              });
+              if (reposFound.length > 0) {
+                var cardRepoHeadline = document.createElement('span');
+                cardRepoHeadline.setAttribute('id', 'github-card-repo-headline');
+                cardRepoHeadline.style.color = '#777';
+                cardRepoHeadline.style.fontSize = '9pt';
+                cardRepoHeadline.style.fontWeight = 'bold';
+                cardRepoHeadline.style.textAlign = 'center';
+                var centerTag = document.createElement('center');
+                centerTag.innerHTML = 'Repositories';
+                cardRepoHeadline.appendChild(centerTag);
+                cardContainer.appendChild(cardRepoHeadline);
+                var cardRepos = document.createElement('div');
+                cardRepos.classList.add('github-card-repos');
+                cardRepos.setAttribute('id', 'github-card-repos');
+                reposFound.forEach(function(i, ind) {
+                  var div = document.createElement('div');
+                  div.classList.add('github-card-repo');
+                  div.id = 'github-card-repo' + (ind + 1);
+                  var repoLink = document.createElement('a');
+                  repoLink.classList.add('github-card-repo-headline');
+                  repoLink.setAttribute('href', i.html_url);
+                  repoLink.innerHTML = "<b>" + i.name + "</b></a><br />";
+                  div.appendChild(repoLink);
+                  var repoDesc = document.createElement('span');
+                  repoDesc.classList.add('github-card-repo-desc');
+                  repoDesc.innerHTML = i.description;
+                  div.appendChild(repoDesc);
+                  div.innerHTML += "<br />";
+                  var repoLang = document.createElement('span');
+                  repoLang.style.fontSize = '8pt';
+                  repoLang.innerHTML = i.language;
+                  div.appendChild(repoLang);
+                  cardRepos.appendChild(div);
+                });
+                cardContainer.appendChild(cardRepos);
+              }
+            }).catch((err) => {
+              var caler_line = err.stack
+              console.log("Error02: " + err);
+            });
+          } catch {
+            console.log("Error03");
+          }
+        }
+        this.cardElem.appendChild(cardContainer);
+      }).catch((err) => {
+        console.log("Error01: " + err);
+      });
+    }
+  }
+
+  class HttpJS {
+    constructor() {}
+    get(url) {
+      return new Promise(function(resolve, reject) {
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.send();
+        xhr.onreadystatechange = function(e) {
+          if (xhr.readyState == 4) {
+            if (xhr.status == 404) {
+              reject('404');
+            } else {
+              resolve(JSON.parse(xhr.responseText));
             }
-        })
+          }
+        }
+      });
     }
-}
-function compareStrings (string1, string2) {
-        string1 = string1.toLowerCase().trim();
-        string2 = string2.toLowerCase().trim();
-    return string1 === string2;
-}
+  }
 
-if(document.getElementById('card') == null){console.log("please write script tag at the end of the body tag");}
-let username = document.getElementById('card').getAttribute('username');
-let repo = document.getElementById('card').getAttribute('repos');
-let repos;
-let nullCounts = 0;
-if(repo == null || repo == undefined ){
-    let repo1 = document.getElementById('card').getAttribute('repo1');
-    let repo2 = document.getElementById('card').getAttribute('repo2');
-    repos = [repo1,repo2];
-}else{
-    repos = repo.split(/\s*,\s*/);
-}
-let head  = document.getElementsByTagName('head')[0];
-let link  = document.createElement('link');
-link.rel  = 'stylesheet';
-link.type = 'text/css';
-link.href = 'https://saurabhdaware.github.io/github-profile-card/cardStyle.css';
-link.media = 'all';
-head.appendChild(link);
-
-class Card{
-    constructor(username,repos=[]){
-        this.username = username;
-        this.repos = repos;
-    }
-    create(){
-        let http = new HttpJS();
-        http.get('https://api.github.com/users/'+this.username).then((card)=>{
-            document.getElementById('card').innerHTML = 
-`
-    <div class ='github-card-container'>
-        <div class='github-card-header'>
-            <img class='github-card-logo' src='https://magentys.io/wp-content/uploads/2017/04/github-logo-1.png'>
-        </div>
-        <div class='github-card-content'>
-            <table class='github-card-image-text-wrap'>
-                <td><img class='github-card-avatar' src='${card.avatar_url}' width=100></td>
-                <td class='github-card-name'> 
-                    ${card.name}<br>
-                    <span style='color:#222;font-size:9pt;'>Followers: ${card.followers} | Following: ${card.following}</span><br>
-                    <a target='_blank' class='github-card-button' href='${card.html_url}'>View profile</a>
-                </td>
-            </table>
-        </div><br><br><br><br>
-        <span id='github-card-repo-headline' style='font-size:9pt;color:#777font-weight:bold;margin:text-align:center'><center>Repositories</center></span>
-        <div class='github-card-repos' id='github-card-repos'>
-        </div>
-    </div>
-`;      }).then(()=>{
-            if(this.repos.length == 0 || (this.repos.length == 1 && (this.repos[0] == ''||this.repos[0]==' '))){
-				document.getElementById('github-card-repo-headline').style.display = 'none'
-			}
-            else{
-                try{
-					var reposNames = [];
-                    http.get(`https://api.github.com/users/${this.username}/repos`).then((reposData)=>{
-						for (let i=0;i < this.repos.length ; i++){
-                            if(this.repos[i] == null || this.repos[i] == undefined || this.repos[i] == ''){
-                                nullCounts++;
-                                continue;
-                            }
-							for (let j=0; j < reposData.length; j++){
-								if (compareStrings(this.repos[i],reposData[j].name)){
-									var div = document.createElement('div');
-									div.id = 'github-card-repo'+(i+1);
-									div.innerHTML = "<a class='github-card-repo-headline' href="+reposData[j].html_url+"><b>"+reposData[j].name+"</b></a><br><span class='github-card-repo-desc'>"+reposData[j].description+"</span><br><span style='font-size:8pt;'>&#9733;"+reposData[j].language+"</span>";
-									div.classList.add('github-card-repo');
-									document.getElementById('github-card-repos').appendChild(div);
-								}
-							}
-                        }
-                        
-                        if(nullCounts >= this.repos.length){
-                            document.getElementById('github-card-repo-headline').style.display = 'none'
-                        }
-                    }).catch((err)=>{
-						var caler_line = err.stack
-						console.log("Error02: "+err);
-						document.getElementById('github-card-repo-headline').style.display = 'none'}
-						);
-                }
-                catch{
-					console.log("Error03");
-					document.getElementById('github-card-repo-headline').style.display = 'none';
-				}
-			}
-		}).catch((err)=>{console.log(err)});
-	}
-}
-
-let card = new Card(username,repos);
-card.create();
+  window.onload = function() {
+    let link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = 'https://saurabhdaware.github.io/github-profile-card/cardStyle.css';
+    link.media = 'all';
+    document.head.appendChild(link);
+    let card = new Card(document.getElementById('card'));
+    card.create();
+  }
+})();

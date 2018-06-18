@@ -1,8 +1,9 @@
 (function() {
   class Card {
     constructor(cardElem) {
+      this.allReposFlag = false;
       this.cardElem = cardElem;
-      if (!cardElem.getAttribute('repos')) {
+      if (!cardElem.getAttribute('repos') && cardElem.getAttribute('repos').toLowerCase() !== 'all') {
         this.repos = [];
         if (cardElem.getAttribute('repo1')) {
           this.repos.push(cardElem.getAttribute('repo1'));
@@ -10,7 +11,10 @@
         if (cardElem.getAttribute('repo2')) {
           this.repos.push(cardElem.getAttribute('repo2'));
         }
-      } else {
+      }else if(cardElem.getAttribute('repos').toLowerCase() === 'all'){
+        this.repos = 'all';
+      } 
+      else {
         this.repos = cardElem.getAttribute('repos').split(',');
       }
       this.username = cardElem.getAttribute('username');
@@ -42,14 +46,15 @@
 `;
         this.cardElem.appendChild(cardContainer);
       }).then(() => {
-        if (this.repos.length > 0) {
+        if(this.repos.toLowerCase() === 'all'){this.allReposFlag = true;}
+        if (this.repos.length > 0 || this.allReposFlag)  {
           try {
             http.get(`https://api.github.com/users/${this.username}/repos`).then((reposData) => {
-              var reposFound = [];
-              this.repos.forEach(function(i) {
-                reposData.forEach(function(j) {
-                  if (i.toLowerCase().trim() === j.name.toLowerCase().trim()) {
-                    reposFound.push(j);
+              let reposFound = [];
+              this.repos.forEach(function(userAddedRepos) {
+                reposData.forEach(function(userAllRepos) {
+                  if (userAddedRepos.toLowerCase().trim() === userAllRepos.name.toLowerCase().trim()) {
+                    reposFound.push(userAllRepos);
                   }
                 });
               });
@@ -65,7 +70,6 @@
                 });
               }
             }).catch((err) => {
-              var caler_line = err.stack
               console.log("Error02: " + err);
             });
           } catch {

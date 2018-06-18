@@ -46,18 +46,23 @@
 `;
         this.cardElem.appendChild(cardContainer);
       }).then(() => {
-        if(this.repos.toLowerCase() === 'all'){this.allReposFlag = true;}
+        if(this.repos === 'all'){this.allReposFlag = true;}
         if (this.repos.length > 0 || this.allReposFlag)  {
           try {
             http.get(`https://api.github.com/users/${this.username}/repos`).then((reposData) => {
               let reposFound = [];
-              this.repos.forEach(function(userAddedRepos) {
-                reposData.forEach(function(userAllRepos) {
-                  if (userAddedRepos.toLowerCase().trim() === userAllRepos.name.toLowerCase().trim()) {
-                    reposFound.push(userAllRepos);
-                  }
+              if(this.allReposFlag){
+                reposFound = reposData;
+                console.log('all flag');
+              }else{
+                this.repos.forEach(function(userAddedRepos) {
+                  reposData.forEach(function(userAllRepos) {
+                    if (userAddedRepos.toLowerCase().trim() === userAllRepos.name.toLowerCase().trim()) {
+                      reposFound.push(userAllRepos);
+                    }
+                  });
                 });
-              });
+              }
               if (reposFound.length > 0) {
                 let cardContainer = this.cardElem.querySelector('.github-card-container');
                 cardContainer.innerHTML += "<span id='github-card-repo-headline' style='font-size:9pt;color:#777font-weight:bold;margin:text-align:center'><center>Repositories</center></span><div class='github-card-repos' id='github-card-repos'></div>";

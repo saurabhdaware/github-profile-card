@@ -53,7 +53,6 @@
               let reposFound = [];
               if(this.allReposFlag){
                 reposFound = reposData;
-                console.log('all flag');
               }else{
                 this.repos.forEach(function(userAddedRepos) {
                   reposData.forEach(function(userAllRepos) {
@@ -66,10 +65,11 @@
               if (reposFound.length > 0) {
                 let cardContainer = this.cardElem.querySelector('.github-card-container');
                 cardContainer.innerHTML += "<span id='github-card-repo-headline' style='font-size:9pt;color:#777font-weight:bold;margin:text-align:center'><center>Repositories</center></span><div class='github-card-repos' id='github-card-repos'></div>";
-                reposFound.forEach(function(a, i) {
+                reposFound.forEach(function(card, i) {
+                  if(!card.language){card.language = ' -';}
                   var div = document.createElement('div');
                   div.id = 'github-card-repo' + (i + 1);
-                  div.innerHTML = "<a class='github-card-repo-headline' href=" + a.html_url + "><b>" + a.name + "</b></a><br><span class='github-card-repo-desc'>" + a.description + "</span><br><span style='font-size:8pt;'>&#9733;" + a.language + "</span>";
+                  div.innerHTML = "<a class='github-card-repo-headline' href=" + card.html_url + "><b>" + card.name + "</b></a><br><span class='github-card-repo-desc'>" + card.description + "</span><br><span class='gc-lang' style='font-size:8pt;'>&#9733;"+ card.language + "</span>";
                   div.classList.add('github-card-repo');
                   cardContainer.querySelector('.github-card-repos').appendChild(div);
                 });

@@ -11,7 +11,12 @@ Unofficial Github profile card for your websites / blogs
     <div username='saurabhdaware' repos='github-profile-card, storm, stormv2,planetZerugoria' class='github-card' id="card"></div>
 ```
 
-- Paste following code before the end of body tag `</body>`
+- If you want to add all your repositories
+```
+    <div username='saurabhdaware' repos='all' class='github-card' id='card'>
+```
+
+- Paste following code before the end of body tag `</body>` or in between your `<head></head>` tags
 
 ```
     <script src='https://saurabhdaware.github.io/github-profile-card/card.js'></script>
@@ -54,6 +59,9 @@ Unofficial Github profile card for your websites / blogs
 }
 ```
 
+- You can see full css file [here](https://saurabhdaware.github.io/github-profile-card/cardStyle.css)
+If you want to change any style just overwrite them with your css
+
 
 ## Example
 - Input
@@ -76,6 +84,5 @@ Unofficial Github profile card for your websites / blogs
 ![](https://raw.githubusercontent.com/saurabhdaware/github-profile-card/master/example.png)
 
 
-## About Project
+## 
 - Let me know if you find any bug.
-- Send pull request if you find any possible improvement.

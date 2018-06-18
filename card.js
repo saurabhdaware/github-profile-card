@@ -1,8 +1,9 @@
 (function() {
   class Card {
     constructor(cardElem) {
+      this.allReposFlag = false;
       this.cardElem = cardElem;
-      if (!cardElem.getAttribute('repos')) {
+      if (!cardElem.getAttribute('repos') && cardElem.getAttribute('repos').toLowerCase() !== 'all') {
         this.repos = [];
         if (cardElem.getAttribute('repo1')) {
           this.repos.push(cardElem.getAttribute('repo1'));
@@ -10,7 +11,10 @@
         if (cardElem.getAttribute('repo2')) {
           this.repos.push(cardElem.getAttribute('repo2'));
         }
-      } else {
+      }else if(cardElem.getAttribute('repos').toLowerCase() === 'all'){
+        this.repos = 'all';
+      } 
+      else {
         this.repos = cardElem.getAttribute('repos').split(',');
       }
       this.username = cardElem.getAttribute('username');
@@ -42,30 +46,35 @@
 `;
         this.cardElem.appendChild(cardContainer);
       }).then(() => {
-        if (this.repos.length > 0) {
+        if(this.repos === 'all'){this.allReposFlag = true;}
+        if (this.repos.length > 0 || this.allReposFlag)  {
           try {
             http.get(`https://api.github.com/users/${this.username}/repos`).then((reposData) => {
-              var reposFound = [];
-              this.repos.forEach(function(i) {
-                reposData.forEach(function(j) {
-                  if (i.toLowerCase().trim() === j.name.toLowerCase().trim()) {
-                    reposFound.push(j);
-                  }
+              let reposFound = [];
+              if(this.allReposFlag){
+                reposFound = reposData;
+              }else{
+                this.repos.forEach(function(userAddedRepos) {
+                  reposData.forEach(function(userAllRepos) {
+                    if (userAddedRepos.toLowerCase().trim() === userAllRepos.name.toLowerCase().trim()) {
+                      reposFound.push(userAllRepos);
+                    }
+                  });
                 });
-              });
+              }
               if (reposFound.length > 0) {
                 let cardContainer = this.cardElem.querySelector('.github-card-container');
                 cardContainer.innerHTML += "<span id='github-card-repo-headline' style='font-size:9pt;color:#777font-weight:bold;margin:text-align:center'><center>Repositories</center></span><div class='github-card-repos' id='github-card-repos'></div>";
-                reposFound.forEach(function(a, i) {
+                reposFound.forEach(function(card, i) {
+                  if(!card.language){card.language = ' -';}
                   var div = document.createElement('div');
                   div.id = 'github-card-repo' + (i + 1);
-                  div.innerHTML = "<a class='github-card-repo-headline' href=" + a.html_url + "><b>" + a.name + "</b></a><br><span class='github-card-repo-desc'>" + a.description + "</span><br><span style='font-size:8pt;'>&#9733;" + a.language + "</span>";
+                  div.innerHTML = "<a class='github-card-repo-headline' href=" + card.html_url + "><b>" + card.name + "</b></a><br><span class='github-card-repo-desc'>" + card.description + "</span><br><span class='gc-lang' style='font-size:8pt;'>&#9733;"+ card.language + "</span>";
                   div.classList.add('github-card-repo');
                   cardContainer.querySelector('.github-card-repos').appendChild(div);
                 });
               }
             }).catch((err) => {
-              var caler_line = err.stack
               console.log("Error02: " + err);
             });
           } catch {

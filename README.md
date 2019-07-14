@@ -1,7 +1,7 @@
 # Github Profile Card
 Unofficial Github profile card for your websites / blogs
 
-### Link : [https://saurabhdaware.github.io/github-profile-card/githubcard.html](https://saurabhdaware.github.io/github-profile-card/githubcard.html) 
+### Generator : [https://apps.saurabhdaware.in/github-profile-card](https://apps.saurabhdaware.in/github-profile-card) 
 
 
 ## How to use
@@ -81,8 +81,8 @@ If you want to change any style just overwrite them with your css
 
 - Output
 
-![](https://raw.githubusercontent.com/saurabhdaware/github-profile-card/master/example.png)
+![](example.png)
 
 
-## 
+##
 - Let me know if you find any bug.

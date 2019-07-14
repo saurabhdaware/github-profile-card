@@ -49,6 +49,7 @@ left:0;
 bottom:0;
 opacity:0.5;
 }.github-card-repos{
+text-align:left;
 max-height:200px;
 overflow-y: auto;
 }.github-card-repos::-webkit-scrollbar{
